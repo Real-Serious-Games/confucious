@@ -16,16 +16,16 @@ describe('confy', function () {
 		expect(testObject.get('some-key')).to.be.undefined;
 	});
 
-	describe('overrides', function () {
+	describe('base', function () {
 
-		it('can get override that was just set', function () {
+		it('can set value', function () {
 
 			testObject.set('some-key', 'smeg');
 		
 			expect(testObject.get('some-key')).to.equal('smeg');	
 		});
 
-		it('can set an object value as an override', function () {
+		it('can set an object value', function () {
 
 			var obj = {
 				'something': 'smeg',
@@ -36,7 +36,7 @@ describe('confy', function () {
 			expect(testObject.get('some-key').something).to.equal('smeg');	
 		});
 
-		it('an override object value cannot be changed externally', function () {
+		it('an object value that has been set cannot be changed externally', function () {
 
 			var obj = {
 				'something': 'smeg',
@@ -49,14 +49,14 @@ describe('confy', function () {
 			expect(testObject.get('some-key').something).to.equal('smeg');	
 		});
 
-		it('setting one override leaves another unset', function () {
+		it('setting one key leaves another unset', function () {
 
 			testObject.set('some-key', 'smeg');
 		
 			expect(testObject.get('some-other-key')).to.be.undefined;
 		});
 
-		it('can clear override that was just set', function () {
+		it('can clear key that was just set', function () {
 
 			testObject.set('some-key', 'smeg');
 
@@ -65,7 +65,7 @@ describe('confy', function () {
 			expect(testObject.get('some-key')).to.be.undefined;
 		});
 
-		it ('can change override that was just set', function () {
+		it ('can change the value of a key', function () {
 
 			testObject.set('some-key', 'smeg1');
 
@@ -74,7 +74,7 @@ describe('confy', function () {
 			expect(testObject.get('some-key')).to.equal('smeg2');	
 		});
 
-		it ('can set override that was cleared', function () {
+		it ('can set the value of a key that was cleared', function () {
 
 			testObject.set('some-key', 'smeg');
 
@@ -86,7 +86,7 @@ describe('confy', function () {
 		});
 	});
 
-	describe('values stack', function () {
+	describe('stack', function () {
 
 		it('can push key/value', function () {
 
@@ -94,7 +94,7 @@ describe('confy', function () {
 				'some-key': 'smeg',
 			});
 
-			expect(testObject.get('some-key')).to.equal('smeg');	
+			expect(testObject.get('some-key')).to.equal('smeg');
 		});
 
 		it('cannot change pushed key/value externally', function () {
@@ -110,7 +110,7 @@ describe('confy', function () {
 			expect(testObject.get('some-key')).to.equal('smeg');	
 		});
 
-		it('can override pushed key/value', function () {
+		it('can change pushed key/value', function () {
 
 			testObject.push({
 				'some-key': 'smeg1',
@@ -121,28 +121,26 @@ describe('confy', function () {
 			expect(testObject.get('some-key')).to.equal('smeg2');	
 		});
 
-		it('can override pushed key/value before it is even pushed', function () {
+		it('pushed key/value overrides underlying key/value', function () {
 
-			testObject.set('some-key', 'smeg2');
+			testObject.set('some-key', 'smeg1');
 
 			testObject.push({
-				'some-key': 'smeg1',
+				'some-key': 'smeg2',
 			});
 
 			expect(testObject.get('some-key')).to.equal('smeg2');	
 		});
 
-		it('can clear override and expose pushed key/value', function () {
+		it('can clear pushed key/value', function () {
 
 			testObject.push({
 				'some-key': 'smeg1',
 			});
-
-			testObject.set('some-key', 'smeg2');
 
 			testObject.clear('some-key');
 
-			expect(testObject.get('some-key')).to.equal('smeg1');	
+			expect(testObject.get('some-key')).to.be.undefined;
 		});
 
 		it('pushing key/value overrides underlying key/value', function () {
@@ -186,7 +184,7 @@ describe('confy', function () {
 			expect(testObject.get('some-key')).to.equal('smeg1');	
 		});
 
-		it('poping only single key/value leaves key undefined', function () {
+		it('poping a single pushed key/value leaves key undefined', function () {
 
 			testObject.push({
 				'some-key': 'smeg',
@@ -203,9 +201,3 @@ describe('confy', function () {
 		});
 	});
 });
-
-
-//todo: should clone passed in json!! make it immutable.
-
-//todo: set should really set the top level in the stack!!
-//todo: maybe have a separate override function that overrides all values!

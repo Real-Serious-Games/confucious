@@ -6,40 +6,37 @@ module.exports = function () {
 	var argv = require('yargs');
 	var extend = require('extend');
 
-	var overrides = {};
+	var baseValues = {};
 	var valuesStack = [];
 
+	valuesStack.push(baseValues);
+
 	//
-	// Set a value by key.
-	// This overrides all other values.
+	// Set a value by key at the top level of the key/value staci.
 	//
 	this.set = function (key, value) {
 		if (typeof(value) === 'object') {
-			overrides[key] = extend(true, {}, value);
+			valuesStack[valuesStack.length-1][key] = extend(true, {}, value);
 		}
 		else {
-			overrides[key] = value;
+			valuesStack[valuesStack.length-1][key] = value;
 		}
 	};
 
 	//
-	// Clear an overridden key.
+	// Clear a key from the top level of the key/value stack.
 	//
 	this.clear = function (key) {
-		delete overrides[key];
+		delete valuesStack[valuesStack.length-1][key];
 	};
 
 	//
 	// Get a value by key.
-	// Value can be nested.
-	// Returns undefined if the key does not exist.
+	// Key can reference a nested value.
+	// Searches all levels in the key/value stack.
+	// Returns undefined if the key does not exist anywhere.
 	//
 	this.get = function (key) {
-		var value = overrides[key];
-		if (typeof(value) !== 'undefined') {
-			return value;
-		}
-
 		for (var i = valuesStack.length-1; i >= 0; --i) {
 			var value = valuesStack[i][key];
 			if (typeof(value) !== 'undefined') {
@@ -61,7 +58,12 @@ module.exports = function () {
 	// Pop a set of values from the stack.
 	//
 	this.pop = function () {
-		valuesStack.pop();
+		if (valuesStack.length > 1) {
+			valuesStack.pop();
+		}
+		else {
+			// Can't push the base level of the stack.
+		}		
 	};
 
 	//
