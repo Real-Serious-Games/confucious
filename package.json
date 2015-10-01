@@ -1,7 +1,7 @@
 {
   "name": "confy",
   "version": "0.0.1",
-  "description": "Like nconf, but easier to use and predicable.",
+  "description": "Kind of like nconf, but easier to use, predicable and more flexible.",
   "main": "index.js",
   "scripts": {
     "test": "mocha"
