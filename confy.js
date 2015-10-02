@@ -3,7 +3,7 @@
 module.exports = function () {
 
 	var fs = require('fs');
-	var argv = require('yargs');
+	var argv = require('yargs').argv;
 	var extend = require('extend');
 
 	var baseValues = {};
