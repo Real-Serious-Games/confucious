@@ -1,6 +1,6 @@
-# confy
+# confucious
 
-A simple key/value configuration manager. 
+A simple, stack-based, key/value configuration manager. 
 
 Kind of like nconf, but easier to use, predicable and more flexible.
 

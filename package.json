@@ -1,7 +1,7 @@
 {
-  "name": "confy",
+  "name": "confucious",
   "version": "0.0.1",
-  "description": "Kind of like nconf, but easier to use, predicable and more flexible.",
+  "description": "App configuration management. Kind of like nconf, but easier to use, predicable and more flexible.",
   "main": "index.js",
   "scripts": {
     "test": "mocha"
