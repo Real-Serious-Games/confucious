@@ -1,5 +1,5 @@
 'use strict';
 
-var Confy = require('./confy');
+var Confucious = require('./confucious');
 
-module.exports = new Confy();
+module.exports = new Confucious();
