@@ -6,7 +6,7 @@ Kind of like nconf, but easier to use, predicable and more flexible.
 
 ## Installation
 
-	npm install --sav confucious
+	npm install --save confucious
 
 ## Usage
 

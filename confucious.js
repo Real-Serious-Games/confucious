@@ -12,6 +12,15 @@ module.exports = function () {
 	valuesStack.push(baseValues);
 
 	//
+	// Debug only function to get the current state of the value stack.
+	// NOTE: This deep copies the data so that it cannot be modified externally this
+	// ensures the managed configuration is immutable.
+	//
+	this.getValueStackCopy = function () {
+		return extend(true, [], valuesStack);
+	};
+
+	//
 	// Set a value by key at the top level of the key/value staci.
 	//
 	this.set = function (key, value) {
