@@ -24,11 +24,26 @@ module.exports = function () {
 	// Set a value by key at the top level of the key/value staci.
 	//
 	this.set = function (key, value) {
+		var keyParts = key.split(':');
+		var hash = valuesStack[valuesStack.length-1];
+
+		for (var i = 0; i < keyParts.length-1; ++i) {
+			var subKey = keyParts[i];
+			hash = hash[subKey];
+			if (typeof(hash) === 'undefined') {
+				hash = {};
+				hash[subKey] = hash;
+			}
+		}
+
+		var lastKeyPartIndex = keyParts.length-1;
+		var lastSubKey = keyParts[lastKeyPartIndex];
+
 		if (typeof(value) === 'object') {
-			valuesStack[valuesStack.length-1][key] = extend(true, {}, value);
+			hash[lastSubKey] = extend(true, {}, value);
 		}
 		else {
-			valuesStack[valuesStack.length-1][key] = value;
+			hash[lastSubKey] = value;
 		}
 	};
 
@@ -36,7 +51,51 @@ module.exports = function () {
 	// Clear a key from the top level of the key/value stack.
 	//
 	this.clear = function (key) {
-		delete valuesStack[valuesStack.length-1][key];
+		var keyParts = key.split(':');
+		var hash = valuesStack[valuesStack.length-1];
+
+		for (var i = 0; i < keyParts.length-1; ++i) {
+			var subKey = keyParts[i];
+			hash = hash[subKey];
+			if (typeof(hash) === 'undefined') {
+				return;
+			}
+		}
+
+		var lastKeyPartIndex = keyParts.length-1;
+		var lastSubKey = keyParts[lastKeyPartIndex];
+		delete hash[lastSubKey];
+	};
+
+	//
+	// Get a value from the specified object. 
+	// Returns undefined if not found.
+	//
+	var getValue = function (key, hash) {
+
+		var value = hash[key];
+		if (typeof(value) !== 'undefined') {
+			return value;
+		}
+
+		return undefined;
+	};
+
+	//
+	// Get a nested value from the specified object.
+	// Returns undefined if not found.
+	//
+	var getNestedValue = function (keyParts, hash) {
+
+		for (var i = 0; i < keyParts.length-1; ++i) {
+			hash = getValue(keyParts[i], hash);
+			if (typeof(hash) === 'undefined') {
+				return undefined;
+			}
+		}
+
+		var lastKeyPartIndex = keyParts.length-1;
+		return getValue(keyParts[lastKeyPartIndex], hash)
 	};
 
 	//
@@ -46,8 +105,11 @@ module.exports = function () {
 	// Returns undefined if the key does not exist anywhere.
 	//
 	this.get = function (key) {
+
+		var keyParts = key.split(':');
+
 		for (var i = valuesStack.length-1; i >= 0; --i) {
-			var value = valuesStack[i][key];
+			var value = getNestedValue(keyParts, valuesStack[i]);
 			if (typeof(value) !== 'undefined') {
 				return value;
 			}

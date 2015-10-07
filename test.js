@@ -86,6 +86,50 @@ describe('confucious', function () {
 		});
 	});
 
+	describe('nested key/values', function () {
+
+		it('can get nested key/value', function () {
+
+			var obj = {
+				'something': {
+					'something': 'dark side',
+				},
+			};
+
+			testObject.set('some-key', obj);
+		
+			expect(testObject.get('some-key:something:something')).to.equal('dark side');	
+		});
+
+		it('can set nested key/value', function () {
+
+			var obj = {
+				'something': {
+					'something': 'dark side',
+				},
+			};
+
+			testObject.set('some-key', obj);
+			testObject.set('some-key:something:something', 'smeg');
+		
+			expect(testObject.get('some-key:something:something')).to.equal('smeg');	
+		});
+
+		it('can clear nested key/value', function () {
+
+			var obj = {
+				'something': {
+					'something': 'dark side',
+				},
+			};
+
+			testObject.set('some-key', obj);
+			testObject.clear('some-key:something:something');
+		
+			expect(testObject.get('some-key:something:something')).to.be.undefined;
+		});
+	});
+
 	describe('stack', function () {
 
 		it('can push key/value', function () {
