@@ -1,14 +1,14 @@
 'use strict';
 
-var Confy = require('./confy');
+var Confucious = require('./confucious');
 var expect = require('chai').expect;
 
-describe('confy', function () {
+describe('confucious', function () {
 
 	var testObject;
 
 	beforeEach(function () {
-		testObject = new Confy();
+		testObject = new Confucious();
 	});
 
 	it('attempting to get unset value returns undefined', function () {
