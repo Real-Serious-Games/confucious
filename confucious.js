@@ -6,9 +6,11 @@ module.exports = function () {
 	var argv = require('yargs').argv;
 	var extend = require('extend');
 
+	var globalValues = {};
 	var baseValues = {};
 	var valuesStack = [];
 
+	valuesStack.push(globalValues);
 	valuesStack.push(baseValues);
 
 	//
@@ -65,6 +67,20 @@ module.exports = function () {
 		var lastKeyPartIndex = keyParts.length-1;
 		var lastSubKey = keyParts[lastKeyPartIndex];
 		delete hash[lastSubKey];
+	};
+
+	//
+	// Set a global key/value.
+	//
+	this.setGlobal = function (key, value) {
+		globalValues[key] = value;
+	};
+
+	//
+	// Clear a global key/value.
+	//
+	this.clearGlobal = function (key) {
+		delete globalValues[key];
 	};
 
 	//
@@ -129,11 +145,11 @@ module.exports = function () {
 	// Pop a set of values from the stack.
 	//
 	this.pop = function () {
-		if (valuesStack.length > 1) {
+		if (valuesStack.length > 2) {
 			valuesStack.pop();
 		}
 		else {
-			// Can't push the base level of the stack.
+			// Can't push the base levels of the stack.
 		}		
 	};
 

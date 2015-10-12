@@ -1,6 +1,6 @@
 {
   "name": "confucious",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "App configuration management. Kind of like nconf, but easier to use, predicable and more flexible.",
   "main": "index.js",
   "scripts": {
