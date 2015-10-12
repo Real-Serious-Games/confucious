@@ -34,11 +34,11 @@ When you get a value that is defined higher in the stack, that value overrides u
 
 	var value = conf.get("key"); // Search stack for a value for "key"
 
-When you set a key/value, the value is setup
+When you set a key/value, the value is modified at the top level of the stack:
 
 	conf.set("key", "some-other-value"); // Set values on top of the stack.
 
-The last hash that was pushed can be popped.
+The last key/values hash that was pushed can be popped.
 
 	conf.pop(); // Revert to stack level underneath.
 
