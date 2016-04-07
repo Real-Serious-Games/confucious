@@ -239,9 +239,110 @@ describe('confucious', function () {
 			expect(testObject.get('some-key')).to.be.undefined;
 		});
 
-		it('can pop empty stack', function () {
+		it('popping empty stack has no effect', function () {
 
 			testObject.pop();
+		});
+	});
+
+	describe('globals', function () {
+
+		it('global is undefined by default', function () {
+			expect(testObject.get('some-global-key')).to.be.undefined;			
+		});
+
+		it('can set global', function () {
+			testObject.setGlobal('some-global-key', 'some-value');
+
+			expect(testObject.get('some-global-key')).to.equal('some-value');
+		});
+
+		it('can change global', function () {
+			testObject.setGlobal('some-global-key', 'some-value');
+
+			testObject.setGlobal('some-global-key', 'some-other-value');
+
+			expect(testObject.get('some-global-key')).to.equal('some-other-value');
+		});
+
+		it('can clear global', function () {
+			testObject.setGlobal('some-global-key', 'some-value');
+
+			testObject.clearGlobal('some-global-key');
+
+			expect(testObject.get('some-global-key')).to.be.undefined;			
+		});
+
+		it('global is retained when stack is popped', function () {
+			testObject.push({});
+
+			testObject.setGlobal('some-global-key', 'some-value');
+
+			testObject.pop();
+
+			expect(testObject.get('some-global-key')).to.equal('some-value');
+		});
+
+		it('global can be overridden by setting key/value', function () {
+			testObject.setGlobal('some-global-key', 'some-value');
+
+			testObject.set('some-global-key', 'some-other-value');
+
+			expect(testObject.get('some-global-key')).to.equal('some-other-value');
+		});
+
+		it('clearing key/value makes global visible again', function () {
+			testObject.setGlobal('some-global-key', 'some-value');
+
+			testObject.set('some-global-key', 'some-other-value');
+
+			testObject.clear('some-global-key');
+
+			expect(testObject.get('some-global-key')).to.equal('some-value');
+		});
+
+		it('global can be overridden by setting key/value on stack', function () {
+			testObject.setGlobal('some-global-key', 'some-value');
+
+			testObject.push({});
+
+			testObject.set('some-global-key', 'some-other-value');
+
+			expect(testObject.get('some-global-key')).to.equal('some-other-value');
+		});
+
+		it('clearing key/value on stack makes global visible again', function () {
+			testObject.setGlobal('some-global-key', 'some-value');
+
+			testObject.push({});
+
+			testObject.set('some-global-key', 'some-other-value');
+
+			testObject.clear('some-global-key');
+
+			expect(testObject.get('some-global-key')).to.equal('some-value');
+		});
+
+		it('global can be overriden by pushing on stack', function () {
+			testObject.setGlobal('some-global-key', 'some-value');
+
+			testObject.push({
+				'some-global-key': 'some-other-value',
+			});
+
+			expect(testObject.get('some-global-key')).to.equal('some-other-value');
+		});
+
+		it('popping stack makes global visible again', function () {
+			testObject.setGlobal('some-global-key', 'some-value');
+
+			testObject.push({
+				'some-global-key': 'some-other-value',
+			});
+
+			testObject.pop();
+
+			expect(testObject.get('some-global-key')).to.equal('some-value');
 		});
 	});
 });

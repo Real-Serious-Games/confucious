@@ -34,15 +34,29 @@ When you get a value that is defined higher in the stack, that value overrides u
 
 	var value = conf.get("key"); // Search stack for a value for "key"
 
-When you set a key/value, the value is setup
+When you set a key/value, the value is modified at the top level of the stack:
 
 	conf.set("key", "some-other-value"); // Set values on top of the stack.
 
-The last hash that was pushed can be popped.
+The last key/values hash that was pushed can be popped.
 
 	conf.pop(); // Revert to stack level underneath.
 
-### Nested key values
+### Global key/values
+
+When you call `set` and `clear` these functions operate (setting or clearing a key/value) at the top level of the stack. This means whatever level you pushed on the stack last will be modified. If you pop that level from the stack the modifications will be lost.
+
+To persist values you may want to set and clear global values:
+
+	conf.setGlobal('some-key', 'some-value');
+
+	conf.clearGlobal('some-key');
+
+When you set a global it sets the value at the bottom level of the stack. So the value persists regardless of what other stack levels you push or pop.
+
+Note that global key/values are same as any other key/value with the exception that they are at the bottom of the stack. Therefore they can be overridden by key/values higher in the stack.  
+
+### Nested key/values
 
 Similar to nconf, Confucious supports the colon key (:) as a separator for getting, setting and clearing nested key/values.
 
