@@ -72,6 +72,13 @@ Similar to nconf, Confucious supports the colon key (:) as a separator for getti
 
 	conf.clear("some-key:some-nested-key");	
 
+### Current configuration
+
+Dump the entire current configuration to JavaScript object (good for debugging):
+
+	var curConfiguration = conf.toObject();
+	console.log(curConfiguration);
+
 ### Load a file
 
 	conf.pushJsonFile("path/to/file.json");

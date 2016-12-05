@@ -173,4 +173,17 @@ module.exports = function () {
 	this.pushEnv = function () {
 		this.push(process.env);
 	};
+
+	//
+	// Get the current configuration as a JavaScript object.
+	//
+	this.toObject = function () {
+		var base = {};
+
+		valuesStack.forEach(function (value) {
+			base = extend(base, value);
+		});
+
+		return base;
+	};
 };

@@ -84,6 +84,16 @@ describe('confucious', function () {
 		
 			expect(testObject.get('some-key')).to.equal('smeg');	
 		});
+
+		it('can get configuration as JavaScript object', function () {
+
+			testObject.set('someKey', 'smeg');
+
+			expect(testObject.toObject()).to.eql({
+				someKey: 'smeg',
+			});
+
+		});
 	});
 
 	describe('nested key/values', function () {
@@ -128,6 +138,27 @@ describe('confucious', function () {
 		
 			expect(testObject.get('some-key:something:something')).to.be.undefined;
 		});
+
+		it('can get nested configuration as JavaScript object', function () {
+
+			var obj = {
+				'something': {
+					'something': 'dark side',
+				},
+			};
+
+			testObject.set('someKey', obj);
+
+			expect(testObject.toObject()).to.eql({
+				someKey: {
+					something: {
+						something: 'dark side',
+					},
+				},
+			});
+
+		});
+
 	});
 
 	describe('stack', function () {
@@ -243,6 +274,39 @@ describe('confucious', function () {
 
 			testObject.pop();
 		});
+
+		it('can get stacked configuration as JavaScript object', function () {
+
+			testObject.push({
+				someKey1: 'smeg1',
+			});
+
+			testObject.push({
+				someKey2: 'smeg2',
+			});
+
+			expect(testObject.toObject()).to.eql({
+				someKey1: 'smeg1',
+				someKey2: 'smeg2',
+			});
+
+		});
+
+		it('can stacked configuration overrides when retreived as JavaScript object', function () {
+
+			testObject.push({
+				someKey: 'smeg1',
+			});
+
+			testObject.push({
+				someKey: 'smeg2',
+			});
+
+			expect(testObject.toObject()).to.eql({
+				someKey: 'smeg2',
+			});
+
+		});
 	});
 
 	describe('globals', function () {
@@ -344,5 +408,35 @@ describe('confucious', function () {
 
 			expect(testObject.get('some-global-key')).to.equal('some-value');
 		});
+
+		it('can get global configuration as JavaScript object', function () {
+
+			testObject.setGlobal('someGlobalKey', 'some-value');
+
+			testObject.push({
+				'someStackedKey': 'some-other-value',
+			});
+
+			expect(testObject.toObject()).to.eql({
+				someGlobalKey: 'some-value',
+				someStackedKey: 'some-other-value',
+			});
+
+		});
+
+		it('can local configuration overrides global configuration when retreived as JavaScript object', function () {
+
+			testObject.setGlobal('someGlobalKey', 'some-value');
+
+			testObject.push({
+				'someGlobalKey': 'some-other-value',
+			});
+
+			expect(testObject.toObject()).to.eql({
+				someGlobalKey: 'some-other-value',
+			});
+
+		});
+
 	});
 });
